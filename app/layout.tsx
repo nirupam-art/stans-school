@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   title: "St. An's Secondary School | Jalore",
   description:
     "Official website of St. An's Secondary School, Jalore, Rajasthan.",
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({
