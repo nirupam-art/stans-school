@@ -25,8 +25,8 @@ const galleryFolders = [
     folder: "school-trip",
   },
   {
-    label: "Session 2025-26",
-    folder: "session-2025-26",
+    label: "Session 2024-25",
+    folder: "session-2024-25",
   },
   {
     label: "Sports",
