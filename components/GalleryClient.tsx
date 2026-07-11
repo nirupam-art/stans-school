@@ -99,11 +99,12 @@ export default function GalleryClient({
                 className="break-inside-avoid"
               >
                 <GalleryCard
-                  src={image.src}
-                  title={image.title}
-                  index={index}
-                  onClick={() => openImage(index)}
-                />
+  src={image.src}
+  title={image.title}
+  index={index}
+  onClick={() => openImage(index)}
+  showText={false}
+/>
               </div>
             ))}
           </motion.div>
