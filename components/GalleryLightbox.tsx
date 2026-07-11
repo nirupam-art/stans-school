@@ -2,7 +2,12 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+} from "lucide-react";
 import { useEffect } from "react";
 
 type GalleryLightboxProps = {
@@ -69,6 +74,18 @@ export default function GalleryLightbox({
           <X size={24} />
         </button>
 
+        {/* Download Button */}
+        <a
+          href={image.src}
+          download
+          onClick={(e) => e.stopPropagation()}
+          className="absolute left-4 top-4 z-50 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-yellow-400 px-4 text-sm font-bold text-black transition hover:bg-yellow-500 sm:left-8 sm:top-8 sm:h-12 sm:px-5"
+        >
+          <Download size={18} />
+          <span className="hidden sm:inline">Download Photo</span>
+          <span className="sm:hidden">Download</span>
+        </a>
+
         {/* Previous Button */}
         <button
           type="button"
@@ -105,10 +122,10 @@ export default function GalleryLightbox({
           onClick={(e) => e.stopPropagation()}
           className="w-full max-w-6xl"
         >
-          <div className="relative mx-auto h-[55vh] w-full overflow-hidden rounded-2xl bg-black shadow-2xl sm:h-[65vh] sm:rounded-3xl md:h-[70vh]">
+          <div className="relative mx-auto h-[65vh] w-full overflow-hidden rounded-2xl bg-black shadow-2xl sm:h-[72vh] sm:rounded-3xl md:h-[78vh]">
             <Image
               src={image.src}
-              alt={image.title}
+              alt="School gallery photo"
               fill
               priority
               sizes="100vw"
@@ -116,21 +133,9 @@ export default function GalleryLightbox({
             />
           </div>
 
-          {/* Caption */}
-          <div className="mx-auto mt-5 max-w-3xl text-center sm:mt-8">
-            <p className="text-xs font-semibold uppercase tracking-[4px] text-yellow-400 sm:text-sm">
-              St. An&apos;s School
-            </p>
-
-            <h2 className="mt-3 text-2xl font-bold text-white sm:text-3xl md:text-4xl">
-              {image.title}
-            </h2>
-
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-gray-300 sm:mt-4 sm:text-lg">
-              {image.description}
-            </p>
-
-            <p className="mt-4 text-sm text-gray-500 sm:mt-6">
+          {/* Only counter, no WhatsApp file name */}
+          <div className="mx-auto mt-5 text-center">
+            <p className="text-sm text-gray-400">
               {currentIndex + 1} / {images.length}
             </p>
           </div>
