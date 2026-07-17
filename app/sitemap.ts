@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://stans-school-swart.vercel.app";
+  const baseUrl = "https://www.stansjalore.in";
 
   return [
     {
