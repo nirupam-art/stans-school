@@ -15,24 +15,28 @@ const features = [
     title: "Academic Excellence",
     description:
       "A strong academic foundation with experienced teachers, modern learning methods, and consistent board results.",
+    href: "/facilities#academics",
   },
   {
     icon: Users,
     title: "Experienced Faculty",
     description:
       "Dedicated educators who inspire curiosity, guide every student, and encourage lifelong learning.",
+    href: "/faculty",
   },
   {
     icon: School,
     title: "Safe & Modern Campus",
     description:
       "A caring environment with CCTV surveillance, disciplined management, and student-focused safety measures.",
+    href: "/facilities#safety",
   },
   {
     icon: Trophy,
     title: "Holistic Development",
     description:
       "Sports, cultural activities, leadership opportunities, and personality development for every student.",
+    href: "/facilities#sports",
   },
 ];
 
@@ -40,37 +44,36 @@ export default function WhyChoose() {
   return (
     <section
       id="why-choose"
-      className="scroll-mt-24 bg-gradient-to-b from-white to-yellow-50 py-16 sm:py-20 md:py-24"
+      className="scroll-mt-24 bg-gradient-to-b from-white to-yellow-50 py-24"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
-
+      <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="mb-12 text-center sm:mb-16"
+          className="mb-16 text-center"
         >
-          <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
+          <p className="font-semibold uppercase tracking-[5px] text-yellow-600">
             Why Choose Us
           </p>
 
-          <h2 className="mt-4 text-3xl font-black leading-tight text-gray-900 sm:text-4xl md:text-5xl">
+          <h2 className="mt-4 text-4xl font-bold text-gray-900 md:text-5xl">
             Why Choose St. An&apos;s School?
           </h2>
 
-          <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-yellow-500 sm:w-24"></div>
+          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-yellow-500"></div>
 
-          <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-600 sm:mt-8 sm:text-lg sm:leading-8">
-            We believe education is about more than academic success. At
-            St. An&apos;s School, students grow with confidence, character,
+          <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-600">
+            We believe education is about more than academic success. At St.
+            An&apos;s School, students grow with confidence, character,
             creativity, discipline, and compassion in a nurturing environment.
           </p>
         </motion.div>
 
         {/* Cards */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature, index) => {
             const Icon = feature.icon;
 
@@ -82,32 +85,32 @@ export default function WhyChoose() {
                 viewport={{ once: true }}
                 transition={{
                   duration: 0.5,
-                  delay: index * 0.1,
+                  delay: index * 0.15,
                 }}
                 whileHover={{
-                  y: -8,
-                  scale: 1.02,
+                  y: -12,
+                  scale: 1.03,
                 }}
-                className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-500 hover:shadow-2xl sm:rounded-3xl sm:p-7 lg:p-8"
+                className="group flex flex-col rounded-3xl border border-gray-100 bg-white p-8 shadow-lg transition-all duration-500 hover:shadow-2xl"
               >
-                <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-100 transition-all duration-500 group-hover:bg-yellow-500 sm:h-16 sm:w-16">
+                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-100 transition-all duration-500 group-hover:bg-yellow-500">
                   <Icon
-                    size={30}
+                    size={32}
                     className="text-yellow-600 transition-all duration-500 group-hover:text-white"
                   />
                 </div>
 
-                <h3 className="mb-3 text-xl font-bold text-gray-900 sm:text-2xl">
+                <h3 className="mb-4 text-2xl font-bold text-gray-900">
                   {feature.title}
                 </h3>
 
-                <p className="flex-grow text-sm leading-7 text-gray-600 sm:text-base">
+                <p className="flex-grow leading-7 text-gray-600">
                   {feature.description}
                 </p>
 
                 <Link
-                  href="/facilities"
-                  className="mt-6 inline-flex items-center text-sm font-semibold text-yellow-600 transition-all duration-300 hover:translate-x-2 hover:text-yellow-700 sm:mt-8 sm:text-base"
+                  href={feature.href}
+                  className="mt-8 inline-flex items-center font-semibold text-yellow-600 transition-all duration-300 hover:translate-x-2 hover:text-yellow-700"
                 >
                   See More →
                 </Link>
