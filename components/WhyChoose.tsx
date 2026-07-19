@@ -109,7 +109,7 @@ export default function WhyChoose() {
                   href="/facilities"
                   className="mt-6 inline-flex items-center text-sm font-semibold text-yellow-600 transition-all duration-300 hover:translate-x-2 hover:text-yellow-700 sm:mt-8 sm:text-base"
                 >
-                  Learn More →
+                  See More →
                 </Link>
               </motion.div>
             );

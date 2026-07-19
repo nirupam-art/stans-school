@@ -6,19 +6,22 @@ import { Bell, CalendarDays, ArrowRight } from "lucide-react";
 
 const newsItems = [
   {
+    title: "Class X Board Examination Forms Are Open",
+    date: "Important Notice",
+    href: "/contact",
+    tag: "Board Forms",
+  },
+  {
+    title: "Head Boy & Head Girl Elections Coming Soon",
+    date: "Student Council",
+    href: "/gallery",
+    tag: "Election",
+  },
+  {
     title: "Admissions Open for Session 2026",
     date: "Apply Now",
     href: "/admissions",
-  },
-  {
-    title: "Annual Function Highlights Coming Soon",
-    date: "Latest Update",
-    href: "/gallery",
-  },
-  {
-    title: "New Academic Session Information",
-    date: "School Notice",
-    href: "/admissions",
+    tag: "Admissions",
   },
 ];
 
