@@ -13,6 +13,10 @@ const galleryFolders = [
     folder: "annual-function",
   },
   {
+    label: "Assembly",
+    folder: "assembly",
+  },
+  {
     label: "Celebrations",
     folder: "celebrations",
   },
@@ -97,9 +101,9 @@ export default function GalleryPage() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-gray-600 sm:mt-6 sm:text-lg sm:leading-8">
-            Explore memorable moments, campus life, cultural events, school
-            trips, annual functions, classroom activities, sports, and
-            celebrations at St. An&apos;s Secondary School.
+            Explore memorable moments, campus life, morning assembly, cultural
+            events, school trips, annual functions, classroom activities, sports,
+            and celebrations at St. An&apos;s Secondary School.
           </p>
         </section>
 
