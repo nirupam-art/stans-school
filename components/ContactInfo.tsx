@@ -1,17 +1,14 @@
 "use client";
 
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Clock,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Navigation, ExternalLink } from "lucide-react";
+
+const directionsLink = "https://maps.app.goo.gl/npLb6B47yBuRACXG8";
+const campusTourLink = "https://maps.app.goo.gl/kgqoAuu3o5374emt9";
 
 export default function ContactInfo() {
   return (
     <section className="bg-gradient-to-b from-white via-gray-50 to-white py-16 sm:py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
-
         {/* Heading */}
         <div className="mb-12 text-center sm:mb-16">
           <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
@@ -32,7 +29,6 @@ export default function ContactInfo() {
 
         {/* Contact Cards */}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-
           {/* Address */}
           <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl sm:p-8">
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-yellow-100 sm:h-16 sm:w-16">
@@ -44,7 +40,7 @@ export default function ContactInfo() {
             </h3>
 
             <a
-              href="https://maps.app.goo.gl/npLb6B47yBuRACXG8"
+              href={directionsLink}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center text-sm leading-7 text-gray-600 transition hover:text-yellow-600 sm:text-base"
@@ -69,9 +65,7 @@ export default function ContactInfo() {
               Call Us
             </h3>
 
-            <p className="text-center font-semibold text-gray-800">
-              Office
-            </p>
+            <p className="text-center font-semibold text-gray-800">Office</p>
 
             <a
               href="tel:+918003616345"
@@ -134,9 +128,20 @@ export default function ContactInfo() {
 
         {/* Google Map */}
         <div className="mt-16 sm:mt-20 md:mt-24">
-          <h2 className="mb-8 text-center text-3xl font-black text-gray-900 sm:mb-10 sm:text-4xl">
-            Visit Our Campus
-          </h2>
+          <div className="mb-8 text-center sm:mb-10">
+            <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
+              Campus Location
+            </p>
+
+            <h2 className="mt-4 text-3xl font-black text-gray-900 sm:text-4xl">
+              Visit Our Campus
+            </h2>
+
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-gray-600 sm:text-lg">
+              Find our school location on Google Maps or explore the campus
+              virtually with our 360° campus view.
+            </p>
+          </div>
 
           <div className="overflow-hidden rounded-3xl border border-gray-200 shadow-2xl">
             <div className="h-[320px] w-full sm:h-[420px] md:h-[550px]">
@@ -151,8 +156,30 @@ export default function ContactInfo() {
               ></iframe>
             </div>
           </div>
-        </div>
 
+          {/* Map Buttons */}
+          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              href={directionsLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-slate-900 px-7 py-4 text-center font-bold text-white shadow-lg transition hover:scale-105 hover:bg-black sm:w-auto"
+            >
+              <Navigation size={20} />
+              Get Directions
+            </a>
+
+            <a
+              href={campusTourLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-yellow-400 px-7 py-4 text-center font-bold text-black shadow-lg transition hover:scale-105 hover:bg-yellow-500 sm:w-auto"
+            >
+              <ExternalLink size={20} />
+              View 360° Campus Tour
+            </a>
+          </div>
+        </div>
       </div>
     </section>
   );
