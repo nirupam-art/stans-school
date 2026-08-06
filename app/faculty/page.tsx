@@ -26,28 +26,28 @@ const facultyMembers = [
     role: "Senior Teacher",
     subject: "Science",
     qualification: "B.Sc, B.Ed",
-    image: "/faculty/meenakshi.png",
+    image: "/Faculty/meenakshi.png",
   },
   {
     name: "Bhagwati",
     role: "Teacher",
     subject: "Mathematics",
     qualification: "M.Sc, B.Ed",
-    image: "/faculty/bhagwati.png",
+    image: "/Faculty/bhagwati.png",
   },
   {
     name: "Sapna",
     role: "Teacher",
     subject: "English",
     qualification: "M.A, B.Ed",
-    image: "/faculty/sapna.png",
+    image: "/Faculty/sapna.png",
   },
   {
     name: "Komal",
     role: "Teacher",
     subject: "Social Science",
     qualification: "M.A, B.Ed",
-    image: "/faculty/komal.png",
+    image: "/Faculty/komal.png",
   },
   {
     name: "Faculty Member Name",
@@ -92,21 +92,21 @@ export default function FacultyPage() {
 
       <main className="min-h-screen bg-white pt-24">
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-yellow-900 py-24 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-yellow-900 py-20 text-white sm:py-24">
           <div className="absolute inset-0 bg-black/25" />
 
-          <div className="relative mx-auto max-w-7xl px-6 text-center">
-            <p className="font-semibold uppercase tracking-[5px] text-yellow-400">
+          <div className="relative mx-auto max-w-7xl px-4 text-center sm:px-6">
+            <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-400 sm:tracking-[5px]">
               Our Faculty
             </p>
 
-            <h1 className="mt-5 text-5xl font-black leading-tight md:text-7xl">
+            <h1 className="mt-5 text-4xl font-black leading-tight sm:text-5xl md:text-7xl">
               Dedicated Teachers,
               <br />
               <span className="text-yellow-400">Strong Foundation</span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-3xl text-lg leading-8 text-gray-200 md:text-xl">
+            <p className="mx-auto mt-6 max-w-3xl text-base leading-7 text-gray-200 sm:text-lg sm:leading-8 md:text-xl">
               Meet the experienced and caring faculty of St. An&apos;s Secondary
               School, committed to academic excellence, discipline, values, and
               holistic development.
@@ -115,7 +115,7 @@ export default function FacultyPage() {
             <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 rounded-full border-2 border-white px-8 py-4 font-bold text-white transition hover:bg-white hover:text-black"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border-2 border-white px-8 py-4 font-bold text-white transition hover:bg-white hover:text-black sm:w-auto"
               >
                 <ArrowLeft size={20} />
                 Back to Home
@@ -123,7 +123,7 @@ export default function FacultyPage() {
 
               <Link
                 href="/contact"
-                className="rounded-full bg-yellow-400 px-8 py-4 font-bold text-black shadow-xl transition hover:bg-yellow-500 hover:scale-105"
+                className="w-full rounded-full bg-yellow-400 px-8 py-4 font-bold text-black shadow-xl transition hover:scale-105 hover:bg-yellow-500 sm:w-auto"
               >
                 Contact School
               </Link>
@@ -132,33 +132,33 @@ export default function FacultyPage() {
         </section>
 
         {/* Faculty Strengths */}
-        <section className="bg-gradient-to-b from-white to-yellow-50 py-20">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="mb-14 text-center">
-              <p className="font-semibold uppercase tracking-[5px] text-yellow-600">
+        <section className="bg-gradient-to-b from-white to-yellow-50 py-16 sm:py-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="mb-12 text-center sm:mb-14">
+              <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
                 Teaching Excellence
               </p>
 
-              <h2 className="mt-4 text-4xl font-black text-gray-900 md:text-5xl">
+              <h2 className="mt-4 text-3xl font-black text-gray-900 sm:text-4xl md:text-5xl">
                 Why Our Faculty Stands Out
               </h2>
 
               <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-yellow-500" />
 
-              <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-gray-600">
+              <p className="mx-auto mt-7 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
                 Our educators work together to create a disciplined, supportive,
                 and inspiring learning environment for every child.
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
               {strengths.map((item) => {
                 const Icon = item.icon;
 
                 return (
                   <div
                     key={item.title}
-                    className="rounded-3xl border border-gray-100 bg-white p-8 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl"
+                    className="rounded-3xl border border-gray-100 bg-white p-6 text-center shadow-lg transition hover:-translate-y-2 hover:shadow-2xl sm:p-8"
                   >
                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-100">
                       <Icon size={32} className="text-yellow-600" />
@@ -179,20 +179,20 @@ export default function FacultyPage() {
         </section>
 
         {/* Faculty Members */}
-        <section className="py-24">
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="mb-16 text-center">
-              <p className="font-semibold uppercase tracking-[5px] text-yellow-600">
+        <section className="py-16 sm:py-20 md:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <div className="mb-12 text-center sm:mb-16">
+              <p className="text-sm font-semibold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
                 Meet Our Team
               </p>
 
-              <h2 className="mt-4 text-4xl font-black text-gray-900 md:text-5xl">
+              <h2 className="mt-4 text-3xl font-black text-gray-900 sm:text-4xl md:text-5xl">
                 Faculty Members
               </h2>
 
               <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-yellow-500" />
 
-              <p className="mx-auto mt-7 max-w-3xl text-lg leading-8 text-gray-600">
+              <p className="mx-auto mt-7 max-w-3xl text-base leading-7 text-gray-600 sm:text-lg sm:leading-8">
                 Our teachers help students build knowledge, confidence,
                 discipline, and strong moral values.
               </p>
@@ -204,16 +204,17 @@ export default function FacultyPage() {
                   key={`${member.name}-${member.subject}`}
                   className="group overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-lg transition hover:-translate-y-2 hover:shadow-2xl"
                 >
-                  <div className="relative h-[330px] bg-gray-100">
+                  <div className="relative h-[340px] bg-gray-100 sm:h-[360px]">
                     <Image
                       src={member.image}
                       alt={member.name}
                       fill
-                      className="object-cover transition duration-700 group-hover:scale-105"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover object-top transition duration-700 group-hover:scale-105"
                     />
                   </div>
 
-                  <div className="p-7">
+                  <div className="p-6 sm:p-7">
                     <span className="inline-block rounded-full bg-yellow-100 px-4 py-1 text-sm font-bold text-yellow-700">
                       {member.role}
                     </span>
@@ -234,8 +235,8 @@ export default function FacultyPage() {
               ))}
             </div>
 
-            <div className="mt-14 rounded-3xl bg-slate-900 p-8 text-center text-white shadow-2xl md:p-12">
-              <h3 className="text-3xl font-black">
+            <div className="mt-14 rounded-3xl bg-slate-900 p-6 text-center text-white shadow-2xl sm:p-8 md:p-12">
+              <h3 className="text-2xl font-black sm:text-3xl">
                 Want to know more about our faculty?
               </h3>
 
@@ -247,7 +248,7 @@ export default function FacultyPage() {
               <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <a
                   href="tel:+918003616345"
-                  className="inline-flex items-center gap-3 rounded-full bg-yellow-400 px-7 py-4 font-bold text-black transition hover:bg-yellow-500"
+                  className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-yellow-400 px-7 py-4 font-bold text-black transition hover:bg-yellow-500 sm:w-auto"
                 >
                   <Phone size={20} />
                   Call School
@@ -255,7 +256,7 @@ export default function FacultyPage() {
 
                 <a
                   href="mailto:schoolstans@gmail.com"
-                  className="inline-flex items-center gap-3 rounded-full border border-white px-7 py-4 font-bold text-white transition hover:bg-white hover:text-black"
+                  className="inline-flex w-full items-center justify-center gap-3 rounded-full border border-white px-7 py-4 font-bold text-white transition hover:bg-white hover:text-black sm:w-auto"
                 >
                   <Mail size={20} />
                   Email School
