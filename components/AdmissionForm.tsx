@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
+import { saveAdmissionEnquiry } from "@/lib/supabase";
 
 export default function AdmissionForm() {
   const form = useRef<HTMLFormElement>(null);
@@ -9,42 +10,84 @@ export default function AdmissionForm() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [parentMobile, setParentMobile] = useState("");
+  const [statusMessage, setStatusMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
 
-  const sendEmail = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!form.current) return;
 
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceId || !templateId || !publicKey) {
-      alert("Email service is not configured properly.");
-      return;
-    }
-
     setSending(true);
+    setStatusMessage(null);
+
+    const formData = new FormData(form.current);
+    const student_name = String(formData.get("student_name") || "").trim();
+    const dob = String(formData.get("dob") || "").trim();
+    const gender = String(formData.get("gender") || "").trim();
+    const class_applying = String(formData.get("class_applying") || "").trim();
+    const father_name = String(formData.get("father_name") || "").trim();
+    const mother_name = String(formData.get("mother_name") || "").trim();
+    const mobile = String(formData.get("mobile") || "").trim();
+    const email = String(formData.get("email") || "").trim();
+    const address = String(formData.get("address") || "").trim();
+    const query = String(formData.get("query") || "").trim();
 
     try {
-      const response = await emailjs.sendForm(
-        serviceId,
-        templateId,
-        form.current,
-        publicKey
-      );
+      // 1. Save directly into Supabase Database
+      const supabaseResult = await saveAdmissionEnquiry({
+        student_name,
+        dob,
+        gender,
+        class_applying,
+        father_name,
+        mother_name,
+        mobile,
+        email,
+        address,
+        query,
+      });
 
-      console.log("SUCCESS:", response);
+      if (!supabaseResult.success) {
+        console.warn("Supabase save notification:", supabaseResult.error);
+      }
+
+      // 2. Dual Send: Try sending email via EmailJS if configured
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+      if (serviceId && templateId && publicKey) {
+        try {
+          await emailjs.sendForm(
+            serviceId,
+            templateId,
+            form.current,
+            publicKey
+          );
+        } catch (emailErr) {
+          console.warn("EmailJS notification skipped/error:", emailErr);
+        }
+      }
 
       setSent(true);
-      form.current.reset();
+      setStatusMessage({
+        type: "success",
+        text: "Your admission enquiry has been saved and submitted to the school administration.",
+      });
+
+      if (form.current) {
+        form.current.reset();
+      }
       setParentMobile("");
     } catch (error) {
-      console.error("EMAILJS ERROR:", error);
-
-      alert(
-        "Something went wrong while submitting the form. Please try again."
-      );
+      console.error("Admission submission error:", error);
+      setStatusMessage({
+        type: "error",
+        text: "Could not submit your enquiry. Please try again or reach out to us directly.",
+      });
     } finally {
       setSending(false);
     }
@@ -53,7 +96,6 @@ export default function AdmissionForm() {
   return (
     <section className="bg-gray-50 py-14 sm:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6">
-
         {/* Heading */}
         <div className="mb-10 text-center">
           <p className="font-semibold uppercase tracking-[4px] text-yellow-600">
@@ -74,12 +116,13 @@ export default function AdmissionForm() {
           <div className="mb-8 space-y-5">
             <div className="rounded-2xl border border-green-300 bg-green-100 p-5 text-center text-green-800 sm:p-6">
               <h3 className="text-lg font-bold">
-                🎉 Admission Enquiry Submitted!
+                🎉 Admission Enquiry Submitted Successfully!
               </h3>
 
               <p className="mt-2 text-sm leading-6 sm:text-base">
-                Thank you for contacting us. Our admission team will get back to
-                you soon.
+                Thank you for your interest in St. An&apos;s Secondary School. Our
+                admissions office has received your application and will reach out
+                to you soon.
               </p>
             </div>
 
@@ -88,7 +131,7 @@ export default function AdmissionForm() {
                 href="https://wa.me/919413516345?text=Hello%20St.%20Ans%20School,%20I%20have%20submitted%20an%20admission%20enquiry%20through%20your%20website.%20Kindly%20assist%20me."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700 sm:w-auto"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-green-600 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-green-700 sm:w-auto"
               >
                 💬 Chat with us on WhatsApp
               </a>
@@ -96,10 +139,16 @@ export default function AdmissionForm() {
           </div>
         )}
 
+        {statusMessage && statusMessage.type === "error" && (
+          <div className="mb-6 rounded-2xl border border-red-300 bg-red-50 p-4 text-center text-sm font-medium text-red-800">
+            {statusMessage.text}
+          </div>
+        )}
+
         {/* Form */}
         <form
           ref={form}
-          onSubmit={sendEmail}
+          onSubmit={handleSubmit}
           className="grid gap-5 rounded-3xl bg-white p-5 shadow-xl sm:p-8 md:grid-cols-2"
         >
           <div>
@@ -277,7 +326,7 @@ export default function AdmissionForm() {
               disabled:opacity-60
             "
           >
-            {sending ? "Submitting..." : "Submit Admission Enquiry"}
+            {sending ? "Submitting to Admissions..." : "Submit Admission Enquiry"}
           </button>
         </form>
       </div>

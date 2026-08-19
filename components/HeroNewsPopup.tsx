@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Bell, CalendarDays, ArrowRight } from "lucide-react";
+import { getAnnouncements, AnnouncementRecord } from "@/lib/supabase";
 
-const newsItems = [
+const defaultNewsItems: AnnouncementRecord[] = [
   {
     title: "Class X Board Examination Forms Are Open",
     date: "Important Notice",
@@ -26,6 +28,20 @@ const newsItems = [
 ];
 
 export default function HeroNewsPopup() {
+  const [items, setItems] = useState<AnnouncementRecord[]>(defaultNewsItems);
+
+  useEffect(() => {
+    async function loadAnnouncements() {
+      const res = await getAnnouncements();
+      if (res.success && res.data && res.data.length > 0) {
+        setItems(res.data.slice(0, 3));
+      }
+    }
+    loadAnnouncements();
+  }, []);
+
+  const topItem = items[0] || defaultNewsItems[0];
+
   return (
     <>
       {/* Mobile News Card */}
@@ -56,16 +72,16 @@ export default function HeroNewsPopup() {
 
           <div className="min-w-0 flex-1">
             <p className="text-xs font-semibold uppercase tracking-[2px] text-yellow-700">
-              Latest Update
+              {topItem.tag || "Latest Update"}
             </p>
 
             <h3 className="truncate text-sm font-bold text-gray-900">
-              Admissions Open for Session 2026
+              {topItem.title}
             </h3>
           </div>
 
           <Link
-            href="/admissions"
+            href={topItem.href || "/admissions"}
             className="shrink-0 rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-black transition hover:bg-yellow-500"
           >
             Apply
@@ -115,10 +131,10 @@ export default function HeroNewsPopup() {
 
         {/* News Items */}
         <div className="space-y-4">
-          {newsItems.map((item, index) => (
+          {items.map((item, index) => (
             <Link
-              key={index}
-              href={item.href}
+              key={item.id || index}
+              href={item.href || "/admissions"}
               className="
                 group
                 block
@@ -137,6 +153,11 @@ export default function HeroNewsPopup() {
               <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-yellow-700">
                 <CalendarDays size={14} />
                 <span>{item.date}</span>
+                {item.tag && (
+                  <span className="ml-auto rounded-full bg-yellow-200/60 px-2 py-0.5 text-[10px] font-bold text-yellow-900">
+                    {item.tag}
+                  </span>
+                )}
               </div>
 
               <div className="flex items-center justify-between gap-3">
