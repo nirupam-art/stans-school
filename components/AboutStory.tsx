@@ -44,6 +44,17 @@ export default function AboutStory() {
               we help students become confident, responsible, and compassionate
               individuals.
             </p>
+
+            <div className="mt-8">
+              <a
+                href="https://www.stansjalore.in/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-yellow-500 px-6 py-3 font-bold text-black shadow-md transition hover:bg-yellow-600 hover:scale-105"
+              >
+                Visit Official Website (stansjalore.in)
+              </a>
+            </div>
           </motion.div>
 
           {/* Right Side */}
