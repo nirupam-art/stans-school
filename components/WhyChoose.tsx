@@ -7,6 +7,7 @@ import {
   Users,
   School,
   Trophy,
+  ArrowRight,
 } from "lucide-react";
 
 const features = [
@@ -14,29 +15,33 @@ const features = [
     icon: GraduationCap,
     title: "Academic Excellence",
     description:
-      "A strong academic foundation with experienced teachers, modern learning methods, and consistent board results.",
+      "A rigorous curriculum with experienced educators, modern smart classrooms, and consistent 100% board pass results.",
     href: "/facilities#academics",
+    badge: "Top Tier",
   },
   {
     icon: Users,
-    title: "Experienced Faculty",
+    title: "Dedicated Faculty",
     description:
-      "Dedicated educators who inspire curiosity, guide every student, and encourage lifelong learning.",
+      "Passionate teachers who provide personalized student attention, nurturing curiosity, intellect, and confidence.",
     href: "/faculty",
+    badge: "Mentorship",
   },
   {
     icon: School,
     title: "Safe & Modern Campus",
     description:
-      "A caring environment with CCTV surveillance, disciplined management, and student-focused safety measures.",
+      "Spacious infrastructure featuring 24/7 CCTV security, lush play areas, science & computer labs, and a vibrant library.",
     href: "/facilities#safety",
+    badge: "Secure",
   },
   {
     icon: Trophy,
-    title: "Holistic Development",
+    title: "Sports & Holistic Growth",
     description:
-      "Sports, cultural activities, leadership opportunities, and personality development for every student.",
+      "Extracurricular athletics, performing arts, debate clubs, and leadership programs to unlock every child's full potential.",
     href: "/facilities#sports",
+    badge: "Activities",
   },
 ];
 
@@ -44,8 +49,9 @@ export default function WhyChoose() {
   return (
     <section
       id="why-choose"
-      className="scroll-mt-24 bg-gradient-to-b from-white to-yellow-50 py-24"
+      className="scroll-mt-24 bg-gradient-to-b from-white via-amber-50/30 to-white py-24 sm:py-28"
     >
+      <div id="facilities" className="-translate-y-28 pointer-events-none" />
       <div className="mx-auto max-w-7xl px-6">
         {/* Heading */}
         <motion.div
@@ -55,64 +61,69 @@ export default function WhyChoose() {
           transition={{ duration: 0.7 }}
           className="mb-16 text-center"
         >
-          <p className="font-semibold uppercase tracking-[5px] text-yellow-600">
-            Why Choose Us
+          <p className="text-xs sm:text-sm font-bold uppercase tracking-[4px] text-yellow-600 sm:tracking-[5px]">
+            The St. An&apos;s Advantage
           </p>
 
-          <h2 className="mt-4 text-4xl font-bold text-gray-900 md:text-5xl">
-            Why Choose St. An&apos;s School?
+          <h2 className="mt-3 text-3xl font-black text-slate-900 sm:text-4xl md:text-5xl">
+            Why Parents Choose St. An&apos;s School
           </h2>
 
-          <div className="mx-auto mt-6 h-1 w-24 rounded-full bg-yellow-500"></div>
+          <div className="mx-auto mt-6 h-1 w-20 rounded-full bg-yellow-500 sm:w-24"></div>
 
-          <p className="mx-auto mt-8 max-w-3xl text-lg leading-8 text-gray-600">
-            We believe education is about more than academic success. At St.
-            An&apos;s School, students grow with confidence, character,
-            creativity, discipline, and compassion in a nurturing environment.
+          <p className="mx-auto mt-6 max-w-3xl text-base sm:text-lg leading-relaxed text-slate-600">
+            We believe education is more than examinations. We prepare students with critical thinking, moral integrity, physical fitness, and lifelong curiosity.
           </p>
         </motion.div>
 
-        {/* Cards */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        {/* Interactive Feature Cards */}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
 
             return (
               <motion.div
                 key={feature.title}
-                initial={{ opacity: 0, y: 35 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{
-                  duration: 0.5,
-                  delay: index * 0.15,
+                  duration: 0.6,
+                  delay: index * 0.1,
+                  ease: "easeOut",
                 }}
                 whileHover={{
-                  y: -12,
-                  scale: 1.03,
+                  y: -10,
+                  scale: 1.02,
                 }}
-                className="group flex flex-col rounded-3xl border border-gray-100 bg-white p-8 shadow-lg transition-all duration-500 hover:shadow-2xl"
+                className="group relative flex flex-col justify-between rounded-3xl border border-slate-100 bg-white p-8 shadow-lg transition-all duration-300 hover:border-yellow-400 hover:shadow-2xl"
               >
-                <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-100 transition-all duration-500 group-hover:bg-yellow-500">
-                  <Icon
-                    size={32}
-                    className="text-yellow-600 transition-all duration-500 group-hover:text-white"
-                  />
+                <div>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-100 text-yellow-700 transition-all duration-300 group-hover:scale-110 group-hover:bg-yellow-400 group-hover:text-slate-950 shadow-md">
+                      <Icon size={28} />
+                    </div>
+
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 transition-colors group-hover:bg-yellow-100 group-hover:text-yellow-800">
+                      {feature.badge}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-extrabold text-slate-900 mb-3">
+                    {feature.title}
+                  </h3>
+
+                  <p className="text-sm leading-relaxed text-slate-600">
+                    {feature.description}
+                  </p>
                 </div>
-
-                <h3 className="mb-4 text-2xl font-bold text-gray-900">
-                  {feature.title}
-                </h3>
-
-                <p className="flex-grow leading-7 text-gray-600">
-                  {feature.description}
-                </p>
 
                 <Link
                   href={feature.href}
-                  className="mt-8 inline-flex items-center font-semibold text-yellow-600 transition-all duration-300 hover:translate-x-2 hover:text-yellow-700"
+                  className="mt-8 inline-flex items-center gap-1.5 text-sm font-bold text-yellow-700 transition-all duration-300 group-hover:text-slate-950 group-hover:translate-x-1"
                 >
-                  See More →
+                  <span>Explore Feature</span>
+                  <ArrowRight size={16} />
                 </Link>
               </motion.div>
             );

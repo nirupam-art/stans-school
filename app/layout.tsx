@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     apple: "/favicon.png",
   },
   verification: {
-  google: "drxDfBMeAnQlIoYk5nWZX6gfXS9yW-qx2sGzNxm_YHM",
-},
+    google: "drxDfBMeAnQlIoYk5nWZX6gfXS9yW-qx2sGzNxm_YHM",
+  },
 };
 
 export default function RootLayout({
@@ -35,9 +35,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body suppressHydrationWarning className="min-h-full flex flex-col">
         {children}
         <Analytics />
       </body>
