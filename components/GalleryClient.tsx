@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { getGalleryPhotos } from "@/lib/supabase";
 
 import GalleryCard from "@/components/GalleryCard";
 import GalleryLightbox from "@/components/GalleryLightbox";
@@ -18,16 +19,32 @@ type GalleryClientProps = {
 };
 
 export default function GalleryClient({
-  images,
+  images: initialImages,
   categories,
 }: GalleryClientProps) {
   const [selectedCategory, setSelectedCategory] = useState("All Photos");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [allImages, setAllImages] = useState<AutoGalleryImage[]>(initialImages);
+
+  useEffect(() => {
+    async function fetchSupabasePhotos() {
+      const res = await getGalleryPhotos();
+      if (res.success && res.data.length > 0) {
+        const dynamicImages: AutoGalleryImage[] = res.data.map((item) => ({
+          src: item.src,
+          title: item.title,
+          category: item.category,
+        }));
+        setAllImages([...dynamicImages, ...initialImages]);
+      }
+    }
+    fetchSupabasePhotos();
+  }, [initialImages]);
 
   const filteredImages =
     selectedCategory === "All Photos"
-      ? images
-      : images.filter((image) => image.category === selectedCategory);
+      ? allImages
+      : allImages.filter((image) => image.category.toLowerCase() === selectedCategory.toLowerCase());
 
   const lightboxImages = filteredImages.map((image) => ({
     src: image.src,

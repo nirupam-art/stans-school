@@ -12,8 +12,13 @@ import {
   createAnnouncement,
   deleteAnnouncement,
   toggleAnnouncementActive,
+  getGalleryPhotos,
+  createGalleryPhoto,
+  deleteGalleryPhoto,
+  uploadGalleryImage,
   AdmissionRecord,
   AnnouncementRecord,
+  GalleryRecord,
   SUPABASE_SQL_SCHEMA,
 } from "@/lib/supabase";
 import {
@@ -34,6 +39,9 @@ import {
   Calendar,
   AlertCircle,
   FileText,
+  Image as ImageIcon,
+  Upload,
+  FileImage,
 } from "lucide-react";
 
 export default function AdminDashboardPage() {
@@ -43,8 +51,8 @@ export default function AdminDashboardPage() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [adminUser, setAdminUser] = useState<string | null>(null);
 
-  // Tab Navigation: 'admissions' | 'announcements' | 'database'
-  const [activeTab, setActiveTab] = useState<"admissions" | "announcements" | "database">("admissions");
+  // Tab Navigation: 'admissions' | 'announcements' | 'gallery' | 'database'
+  const [activeTab, setActiveTab] = useState<"admissions" | "announcements" | "gallery" | "database">("admissions");
 
   // Admissions State
   const [admissions, setAdmissions] = useState<AdmissionRecord[]>([]);
@@ -63,6 +71,18 @@ export default function AdminDashboardPage() {
   const [newDesc, setNewDesc] = useState("");
   const [newHref, setNewHref] = useState("/admissions");
   const [savingAnnouncement, setSavingAnnouncement] = useState(false);
+
+  // Gallery State
+  const [galleryPhotos, setGalleryPhotos] = useState<GalleryRecord[]>([]);
+  const [loadingGallery, setLoadingGallery] = useState(false);
+  const [showAddPhoto, setShowAddPhoto] = useState(false);
+  const [uploadMode, setUploadMode] = useState<"file" | "url">("file");
+  const [photoTitle, setPhotoTitle] = useState("");
+  const [photoCategory, setPhotoCategory] = useState("Annual Function");
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoUrlInput, setPhotoUrlInput] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [galleryCategoryFilter, setGalleryCategoryFilter] = useState("ALL");
 
   // SQL Copy State
   const [copiedSql, setCopiedSql] = useState(false);
@@ -131,15 +151,25 @@ export default function AdminDashboardPage() {
     setLoadingAnnouncements(false);
   };
 
+  const loadGalleryData = async () => {
+    setLoadingGallery(true);
+    const res = await getGalleryPhotos();
+    if (res.success) {
+      setGalleryPhotos(res.data);
+    }
+    setLoadingGallery(false);
+  };
+
   useEffect(() => {
     let isMounted = true;
 
     async function initialFetch() {
       if (checkingAuth) return;
 
-      const [admRes, annRes] = await Promise.all([
+      const [admRes, annRes, galRes] = await Promise.all([
         getAdmissions(),
         getAllAnnouncements(),
+        getGalleryPhotos(),
       ]);
 
       if (!isMounted) return;
@@ -149,6 +179,9 @@ export default function AdminDashboardPage() {
       }
       if (annRes.success) {
         setAnnouncements(annRes.data);
+      }
+      if (galRes.success) {
+        setGalleryPhotos(galRes.data);
       }
     }
 
@@ -243,6 +276,77 @@ export default function AdminDashboardPage() {
     }
   };
 
+  // Gallery actions
+  const handleAddPhoto = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!photoTitle.trim()) {
+      setNotification({ type: "error", text: "Please enter a title for the photo." });
+      return;
+    }
+
+    setUploadingPhoto(true);
+
+    let imageUrl = photoUrlInput.trim();
+    let storagePath: string | undefined = undefined;
+
+    if (uploadMode === "file") {
+      if (!photoFile) {
+        setNotification({ type: "error", text: "Please select an image file to upload." });
+        setUploadingPhoto(false);
+        return;
+      }
+
+      const uploadRes = await uploadGalleryImage(photoFile);
+      if (!uploadRes.success) {
+        setNotification({
+          type: "error",
+          text: `Upload failed: ${uploadRes.error}. (Make sure bucket 'gallery-images' exists in Supabase Storage or run the SQL in Database tab)`,
+        });
+        setUploadingPhoto(false);
+        return;
+      }
+      imageUrl = uploadRes.url;
+      storagePath = uploadRes.storagePath;
+    } else {
+      if (!imageUrl) {
+        setNotification({ type: "error", text: "Please enter an Image URL." });
+        setUploadingPhoto(false);
+        return;
+      }
+    }
+
+    const res = await createGalleryPhoto({
+      title: photoTitle.trim(),
+      category: photoCategory,
+      src: imageUrl,
+      storage_path: storagePath,
+    });
+
+    if (res.success) {
+      setPhotoTitle("");
+      setPhotoFile(null);
+      setPhotoUrlInput("");
+      setShowAddPhoto(false);
+      loadGalleryData();
+      setNotification({ type: "success", text: "Photo added to gallery successfully!" });
+    } else {
+      setNotification({ type: "error", text: "Failed to save photo: " + res.error });
+    }
+
+    setUploadingPhoto(false);
+  };
+
+  const handleDeletePhoto = async (id: string, storagePath?: string) => {
+    if (!confirm("Are you sure you want to delete this photo from the gallery?")) return;
+    const res = await deleteGalleryPhoto(id, storagePath);
+    if (res.success) {
+      setGalleryPhotos((prev) => prev.filter((p) => p.id !== id));
+      setNotification({ type: "success", text: "Photo removed from gallery." });
+    } else {
+      setNotification({ type: "error", text: "Failed to delete photo: " + res.error });
+    }
+  };
+
   // Copy SQL schema
   const handleCopySql = () => {
     navigator.clipboard.writeText(SUPABASE_SQL_SCHEMA);
@@ -265,6 +369,14 @@ export default function AdminDashboardPage() {
       return matchSearch && matchStatus;
     });
   }, [admissions, admissionsSearch, statusFilter]);
+
+  // Filtered Gallery Photos
+  const filteredGalleryPhotos = useMemo(() => {
+    if (galleryCategoryFilter === "ALL") return galleryPhotos;
+    return galleryPhotos.filter(
+      (p) => p.category.toLowerCase() === galleryCategoryFilter.toLowerCase()
+    );
+  }, [galleryPhotos, galleryCategoryFilter]);
 
   // Statistics
   const stats = useMemo(() => {
@@ -379,6 +491,18 @@ export default function AdminDashboardPage() {
           >
             <Bell size={18} />
             Announcements & News ({announcements.length})
+          </button>
+
+          <button
+            onClick={() => setActiveTab("gallery")}
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition ${
+              activeTab === "gallery"
+                ? "bg-yellow-400 text-slate-950 shadow-lg"
+                : "bg-slate-900 text-slate-400 hover:bg-slate-800 hover:text-slate-200"
+            }`}
+          >
+            <ImageIcon size={18} />
+            Photo Gallery ({galleryPhotos.length})
           </button>
 
           <button
@@ -839,7 +963,254 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
-        {/* TAB 3: DATABASE SETUP & SQL HELPER */}
+        {/* TAB 3: PHOTO GALLERY MANAGEMENT */}
+        {activeTab === "gallery" && (
+          <div className="space-y-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-white">School Photo Gallery Management</h2>
+                <p className="text-xs text-slate-400">
+                  Upload new photos, edit details, or delete pictures displayed in the school gallery.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={loadGalleryData}
+                  disabled={loadingGallery}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-800 px-3.5 py-2.5 text-sm font-semibold text-slate-300 transition hover:bg-slate-700 disabled:opacity-50"
+                  title="Refresh gallery photos"
+                >
+                  <RefreshCw size={16} className={loadingGallery ? "animate-spin" : ""} />
+                  <span className="hidden sm:inline">Refresh</span>
+                </button>
+
+                <button
+                  onClick={() => setShowAddPhoto(!showAddPhoto)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-yellow-400 px-4 py-2.5 text-sm font-bold text-slate-950 shadow-lg transition hover:bg-yellow-500"
+                >
+                  <Plus size={18} />
+                  {showAddPhoto ? "Close Form" : "Add / Upload Photo"}
+                </button>
+              </div>
+            </div>
+
+            {/* Add / Upload Photo Form */}
+            {showAddPhoto && (
+              <form
+                onSubmit={handleAddPhoto}
+                className="rounded-2xl border border-yellow-400/30 bg-slate-900 p-6 space-y-5 shadow-xl"
+              >
+                <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+                  <h3 className="text-base font-bold text-white flex items-center gap-2">
+                    <FileImage size={18} className="text-yellow-400" />
+                    Upload / Add New Picture
+                  </h3>
+
+                  {/* Toggle Upload Mode */}
+                  <div className="flex items-center gap-1 rounded-xl bg-slate-950 p-1 border border-slate-800 text-xs">
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("file")}
+                      className={`px-3 py-1 rounded-lg font-bold transition ${
+                        uploadMode === "file"
+                          ? "bg-yellow-400 text-slate-950"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      File Upload
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUploadMode("url")}
+                      className={`px-3 py-1 rounded-lg font-bold transition ${
+                        uploadMode === "url"
+                          ? "bg-yellow-400 text-slate-950"
+                          : "text-slate-400 hover:text-white"
+                      }`}
+                    >
+                      External URL
+                    </button>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">
+                      Photo Title / Caption *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Sports Day Opening Ceremony"
+                      value={photoTitle}
+                      onChange={(e) => setPhotoTitle(e.target.value)}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="mb-1 block text-xs font-semibold text-slate-300">
+                      Gallery Category *
+                    </label>
+                    <select
+                      value={photoCategory}
+                      onChange={(e) => setPhotoCategory(e.target.value)}
+                      className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
+                    >
+                      <option value="Annual Function">Annual Function</option>
+                      <option value="Assembly">Assembly</option>
+                      <option value="Celebrations">Celebrations</option>
+                      <option value="Classroom">Classroom</option>
+                      <option value="School Trip">School Trip</option>
+                      <option value="Session 2024-25">Session 2024-25</option>
+                      <option value="Sports">Sports</option>
+                      <option value="General">General / Campus</option>
+                    </select>
+                  </div>
+
+                  {uploadMode === "file" ? (
+                    <div className="sm:col-span-2">
+                      <label className="mb-1 block text-xs font-semibold text-slate-300">
+                        Choose Image File (JPG, PNG, WebP) *
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        required={uploadMode === "file"}
+                        onChange={(e) => setPhotoFile(e.target.files?.[0] || null)}
+                        className="w-full cursor-pointer rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-slate-300 file:mr-4 file:rounded-lg file:border-0 file:bg-yellow-400 file:px-3 file:py-1 file:text-xs file:font-bold file:text-slate-950 hover:file:bg-yellow-500"
+                      />
+                    </div>
+                  ) : (
+                    <div className="sm:col-span-2">
+                      <label className="mb-1 block text-xs font-semibold text-slate-300">
+                        Direct Image Web URL *
+                      </label>
+                      <input
+                        type="url"
+                        required={uploadMode === "url"}
+                        placeholder="https://images.unsplash.com/... or https://..."
+                        value={photoUrlInput}
+                        onChange={(e) => setPhotoUrlInput(e.target.value)}
+                        className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowAddPhoto(false)}
+                    className="rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-semibold text-slate-300 hover:bg-slate-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={uploadingPhoto}
+                    className="inline-flex items-center gap-2 rounded-xl bg-yellow-400 px-5 py-2 text-sm font-bold text-slate-950 shadow hover:bg-yellow-500 disabled:opacity-50"
+                  >
+                    <Upload size={16} />
+                    {uploadingPhoto ? "Uploading Photo..." : "Save to Gallery"}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {/* Category Filter & Photo Count Bar */}
+            <div className="flex flex-col gap-3 rounded-2xl border border-slate-800 bg-slate-900 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-slate-400">Category Filter:</span>
+                <select
+                  value={galleryCategoryFilter}
+                  onChange={(e) => setGalleryCategoryFilter(e.target.value)}
+                  className="rounded-xl border border-slate-700 bg-slate-950 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-yellow-400"
+                >
+                  <option value="ALL">All Categories ({galleryPhotos.length})</option>
+                  <option value="Annual Function">Annual Function</option>
+                  <option value="Assembly">Assembly</option>
+                  <option value="Celebrations">Celebrations</option>
+                  <option value="Classroom">Classroom</option>
+                  <option value="School Trip">School Trip</option>
+                  <option value="Session 2024-25">Session 2024-25</option>
+                  <option value="Sports">Sports</option>
+                  <option value="General">General / Campus</option>
+                </select>
+              </div>
+
+              <p className="text-xs text-slate-400 font-medium">
+                Showing {filteredGalleryPhotos.length} uploaded photo(s)
+              </p>
+            </div>
+
+            {/* Photos Grid */}
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {filteredGalleryPhotos.length === 0 ? (
+                <div className="col-span-full rounded-2xl border border-slate-800 bg-slate-900 py-12 text-center text-slate-500">
+                  <ImageIcon size={40} className="mx-auto mb-3 opacity-40" />
+                  <p className="text-sm font-semibold">No uploaded pictures found in this category.</p>
+                  <p className="text-xs mt-1 text-slate-600">
+                    Click &quot;Add / Upload Photo&quot; above to add your first picture.
+                  </p>
+                </div>
+              ) : (
+                filteredGalleryPhotos.map((photo) => (
+                  <div
+                    key={photo.id}
+                    className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-md transition hover:border-slate-700"
+                  >
+                    {/* Image Box */}
+                    <div className="relative aspect-video w-full overflow-hidden bg-slate-950">
+                      {/* eslint-disable-next-html-element-suppression */}
+                      <img
+                        src={photo.src}
+                        alt={photo.title}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                      <span className="absolute top-2 left-2 rounded-full bg-slate-950/80 px-2.5 py-0.5 text-[10px] font-bold text-yellow-400 border border-slate-700/60 backdrop-blur-md">
+                        {photo.category}
+                      </span>
+
+                      <button
+                        onClick={() => {
+                          if (photo.id) handleDeletePhoto(photo.id, photo.storage_path);
+                        }}
+                        className="absolute top-2 right-2 rounded-lg bg-red-950/80 p-2 text-red-400 border border-red-500/30 opacity-80 backdrop-blur-md transition hover:bg-red-600 hover:text-white hover:opacity-100"
+                        title="Delete picture"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+
+                    {/* Footer Info */}
+                    <div className="p-3.5">
+                      <h4 className="text-sm font-bold text-white line-clamp-1">{photo.title}</h4>
+                      <div className="mt-1 flex items-center justify-between text-[11px] text-slate-400">
+                        <span>
+                          {photo.created_at
+                            ? new Date(photo.created_at).toLocaleDateString()
+                            : "Recent"}
+                        </span>
+                        <a
+                          href={photo.src}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1 text-yellow-400 hover:underline"
+                        >
+                          View Full <ExternalLink size={10} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: DATABASE SETUP & SQL HELPER */}
         {activeTab === "database" && (
           <div className="space-y-6">
             <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
