@@ -86,13 +86,23 @@ export default function NewsSection() {
               </div>
 
               <Link
-                href={item.href || "/contact"}
+                href={item.href || "/news"}
                 className="mt-6 inline-flex items-center font-bold text-slate-900 transition hover:text-yellow-600"
               >
-                Learn More →
+                Read Notice →
               </Link>
             </div>
           ))}
+        </div>
+
+        {/* View All Bulletins CTA */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-8 py-3.5 text-sm font-bold text-white shadow-lg transition hover:scale-105 hover:bg-yellow-500 hover:text-slate-950"
+          >
+            View All News &amp; Notices →
+          </Link>
         </div>
       </div>
     </section>

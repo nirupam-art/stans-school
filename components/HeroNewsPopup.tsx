@@ -176,7 +176,7 @@ export default function HeroNewsPopup() {
 
         {/* Button */}
         <Link
-          href="/admissions"
+          href="/news"
           className="
             mt-5
             flex
@@ -195,7 +195,7 @@ export default function HeroNewsPopup() {
             hover:bg-yellow-500
           "
         >
-          View Admission Details
+          View All Bulletins &amp; Notices →
         </Link>
       </motion.div>
     </>

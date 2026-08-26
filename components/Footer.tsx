@@ -70,10 +70,19 @@ export default function Footer() {
 
             <li>
               <Link
-                href="/#gallery"
+                href="/gallery"
                 className="hover:text-yellow-400 transition"
               >
                 Gallery
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                href="/news"
+                className="hover:text-yellow-400 transition"
+              >
+                News &amp; Notices
               </Link>
             </li>
 
