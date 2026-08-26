@@ -1,12 +1,22 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl =
+const rawUrl =
   process.env.NEXT_PUBLIC_SUPABASE_URL ||
   "https://mjycflntkayqzvfrvvta.supabase.co";
 
-const supabaseAnonKey =
+// Auto-fix any typo if myjc is passed in Vercel environment variables
+const supabaseUrl = rawUrl.replace("myjcflntkayqzvfrvvta", "mjycflntkayqzvfrvvta");
+
+const rawKey =
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qeWNmbG50a2F5cXp2ZnJ2dnRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNDA4NjEsImV4cCI6MjEwMjYxNjg2MX0.P0lDrNb5VMNXFo0ll8YgLnKrXpAx3JKn6g7qzFWci38";
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  "";
+
+// Ensure valid JWT anon key is used even if Vercel env has sb_publishable key or empty
+const supabaseAnonKey =
+  !rawKey || rawKey.startsWith("sb_publishable")
+    ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1qeWNmbG50a2F5cXp2ZnJ2dnRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNDA4NjEsImV4cCI6MjEwMjYxNjg2MX0.P0lDrNb5VMNXFo0ll8YgLnKrXpAx3JKn6g7qzFWci38"
+    : rawKey;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
