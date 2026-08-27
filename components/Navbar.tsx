@@ -126,8 +126,8 @@ export default function Navbar() {
       transition={{ duration: 0.5, ease: "easeOut" }}
       className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 ${
         isHomeTop
-          ? "bg-transparent border-transparent py-4 shadow-none"
-          : "bg-slate-950/85 backdrop-blur-xl border-b border-white/10 py-3 shadow-xl"
+          ? "bg-transparent border-transparent py-4 shadow-none text-white"
+          : "bg-white/90 backdrop-blur-xl border-b border-slate-200/80 py-3.5 shadow-sm text-slate-900"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6">
@@ -149,10 +149,20 @@ export default function Navbar() {
           </div>
 
           <div>
-            <h1 className="text-lg font-black leading-tight text-white transition group-hover:text-yellow-400 sm:text-xl md:text-2xl drop-shadow-sm">
+            <h1
+              className={`text-lg font-black leading-tight transition sm:text-xl md:text-2xl ${
+                isHomeTop
+                  ? "text-white group-hover:text-yellow-400 drop-shadow-sm"
+                  : "text-slate-900 group-hover:text-yellow-600"
+              }`}
+            >
               St. An&apos;s School
             </h1>
-            <p className="text-xs font-semibold text-slate-300/90">
+            <p
+              className={`text-xs font-semibold ${
+                isHomeTop ? "text-slate-300/90" : "text-slate-500"
+              }`}
+            >
               Jalore, Rajasthan
             </p>
           </div>
@@ -172,15 +182,19 @@ export default function Navbar() {
                 onClick={(e) => handleNavClick(e, item)}
                 className={`group relative text-sm font-bold transition-all duration-200 ${
                   pathname === item.href
-                    ? "text-yellow-400"
-                    : "text-slate-100 hover:text-yellow-400"
+                    ? isHomeTop
+                      ? "text-yellow-400 font-black"
+                      : "text-yellow-600 font-black"
+                    : isHomeTop
+                    ? "text-slate-100 hover:text-yellow-400"
+                    : "text-slate-700 hover:text-yellow-600"
                 }`}
               >
                 {item.name}
                 <span
-                  className={`absolute -bottom-1 left-0 h-[2px] bg-yellow-400 transition-all duration-300 ${
-                    pathname === item.href ? "w-full" : "w-0 group-hover:w-full"
-                  }`}
+                  className={`absolute -bottom-1 left-0 h-[2px] transition-all duration-300 ${
+                    isHomeTop ? "bg-yellow-400" : "bg-yellow-500"
+                  } ${pathname === item.href ? "w-full" : "w-0 group-hover:w-full"}`}
                 />
               </Link>
             </motion.div>
@@ -191,7 +205,7 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/admissions"
-            className="rounded-full bg-yellow-400 px-6 py-2 text-sm font-black text-slate-950 shadow-md transition-all duration-300 hover:scale-105 hover:bg-yellow-300 hover:shadow-[0_0_20px_rgba(250,204,21,0.5)]"
+            className="rounded-full bg-yellow-400 px-6 py-2 text-sm font-black text-slate-950 shadow-md transition-all duration-300 hover:scale-105 hover:bg-yellow-500 hover:shadow-lg"
           >
             Admissions Open
           </Link>
@@ -201,7 +215,11 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:bg-yellow-400 hover:text-slate-950 lg:hidden border border-white/15"
+          className={`flex h-10 w-10 items-center justify-center rounded-full transition lg:hidden border ${
+            isHomeTop
+              ? "bg-white/10 text-white hover:bg-yellow-400 hover:text-slate-950 border-white/15"
+              : "bg-slate-100 text-slate-900 hover:bg-yellow-400 hover:text-slate-950 border-slate-200"
+          }`}
           aria-label="Toggle navigation menu"
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -216,7 +234,11 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-2xl shadow-2xl lg:hidden"
+            className={`overflow-hidden border-t shadow-2xl lg:hidden ${
+              isHomeTop
+                ? "border-white/10 bg-slate-950/95 text-white backdrop-blur-2xl"
+                : "border-slate-200 bg-white/98 text-slate-900 backdrop-blur-xl"
+            }`}
           >
             <div className="space-y-2 px-6 py-6">
               {links.map((item) => (
@@ -226,8 +248,10 @@ export default function Navbar() {
                   onClick={(e) => handleNavClick(e, item)}
                   className={`block rounded-xl px-4 py-3 text-base font-bold transition ${
                     pathname === item.href
-                      ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400/30"
-                      : "text-slate-200 hover:bg-white/5 hover:text-yellow-400"
+                      ? "bg-yellow-400/20 text-yellow-600 border border-yellow-400/30"
+                      : isHomeTop
+                      ? "text-slate-200 hover:bg-white/5 hover:text-yellow-400"
+                      : "text-slate-800 hover:bg-slate-50 hover:text-yellow-600"
                   }`}
                 >
                   {item.name}
@@ -238,7 +262,7 @@ export default function Navbar() {
                 <Link
                   href="/admissions"
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-center text-sm font-black text-slate-950 shadow-md transition hover:bg-yellow-300"
+                  className="flex w-full items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-center text-sm font-black text-slate-950 shadow-md transition hover:bg-yellow-500"
                 >
                   Apply for Admission 2026
                 </Link>
