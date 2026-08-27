@@ -81,10 +81,10 @@ export default function HeroNewsPopup() {
           </div>
 
           <Link
-            href={topItem.href || "/admissions"}
+            href={topItem.href || "/news"}
             className="shrink-0 rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-black transition hover:bg-yellow-500"
           >
-            Apply
+            {topItem.href && topItem.href !== "/news" ? "View" : "Notice"}
           </Link>
         </div>
       </motion.div>
@@ -134,7 +134,7 @@ export default function HeroNewsPopup() {
           {items.map((item, index) => (
             <Link
               key={item.id || index}
-              href={item.href || "/admissions"}
+              href={item.href || "/news"}
               className="
                 group
                 block

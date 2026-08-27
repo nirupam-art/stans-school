@@ -20,6 +20,15 @@ import { getAnnouncements, AnnouncementRecord } from "@/lib/supabase";
 const defaultSampleNews: AnnouncementRecord[] = [
   {
     id: "sample-1",
+    title: "Rakshabandhan Celebration & Holiday Notice",
+    date: "August 2026",
+    tag: "Holiday",
+    description:
+      "St. An's Secondary School will remain closed on account of Rakshabandhan. We wish all our students, parents, and staff a happy and joyful Rakshabandhan!",
+    href: "",
+  },
+  {
+    id: "sample-2",
     title: "Admissions Open for Academic Session 2026-27",
     date: "June 2026",
     tag: "Admissions",
@@ -28,7 +37,7 @@ const defaultSampleNews: AnnouncementRecord[] = [
     href: "/admissions",
   },
   {
-    id: "sample-2",
+    id: "sample-3",
     title: "Class X Board Examination Registration Forms",
     date: "Important Notice",
     tag: "Board Forms",
@@ -37,25 +46,25 @@ const defaultSampleNews: AnnouncementRecord[] = [
     href: "/contact",
   },
   {
-    id: "sample-3",
+    id: "sample-4",
     title: "Summer Vacation Notification & Homework Schedule",
     date: "May 2026",
     tag: "Holiday",
     description:
       "St. An's Secondary School will remain closed for summer vacation as per the academic calendar. Summer holiday homework has been uploaded on the portal.",
-    href: "/contact",
+    href: "",
   },
   {
-    id: "sample-4",
+    id: "sample-5",
     title: "Annual Sports Meet & Inter-House Competitions",
     date: "February 2026",
     tag: "Event",
     description:
-      "Congratulations to all houses for outstanding participation in cricket, athletics, badmington, and indoor sports events.",
+      "Congratulations to all houses for outstanding participation in cricket, athletics, badminton, and indoor sports events.",
     href: "/gallery",
   },
   {
-    id: "sample-5",
+    id: "sample-6",
     title: "Science Exhibition & Craft Fair 2026",
     date: "January 2026",
     tag: "Event",

@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS public.announcements (
   description TEXT,
   date TEXT NOT NULL,
   tag TEXT DEFAULT 'General',
-  href TEXT DEFAULT '/admissions',
+  href TEXT DEFAULT '',
   is_active BOOLEAN DEFAULT true,
   priority INT DEFAULT 1,
   created_at TIMESTAMPTZ DEFAULT now()

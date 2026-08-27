@@ -67,9 +67,10 @@ export default function AdminDashboardPage() {
   const [showAddAnnouncement, setShowAddAnnouncement] = useState(false);
   const [newTitle, setNewTitle] = useState("");
   const [newDate, setNewDate] = useState("");
-  const [newTag, setNewTag] = useState("Admissions");
+  const [newTag, setNewTag] = useState("Notice");
   const [newDesc, setNewDesc] = useState("");
-  const [newHref, setNewHref] = useState("/admissions");
+  const [redirectOption, setRedirectOption] = useState<string>("none");
+  const [customHref, setCustomHref] = useState<string>("");
   const [savingAnnouncement, setSavingAnnouncement] = useState(false);
 
   // Gallery State
@@ -235,20 +236,30 @@ export default function AdminDashboardPage() {
     e.preventDefault();
     if (!newTitle.trim()) return;
 
+    let targetHref = "";
+    if (redirectOption === "custom") {
+      targetHref = customHref.trim();
+    } else if (redirectOption !== "none") {
+      targetHref = redirectOption;
+    }
+
     setSavingAnnouncement(true);
     const res = await createAnnouncement({
       title: newTitle.trim(),
       date: newDate.trim() || new Date().toLocaleDateString("en-IN", { month: "short", year: "numeric" }),
-      tag: newTag,
+      tag: newTag.trim() || "Notice",
       description: newDesc.trim(),
-      href: newHref.trim() || "/admissions",
+      href: targetHref,
       is_active: true,
     });
 
     if (res.success) {
       setNewTitle("");
       setNewDate("");
+      setNewTag("Notice");
       setNewDesc("");
+      setRedirectOption("none");
+      setCustomHref("");
       setShowAddAnnouncement(false);
       loadAnnouncementsData();
       setNotification({ type: "success", text: "Announcement created successfully!" });
@@ -815,7 +826,7 @@ export default function AdminDashboardPage() {
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Science Exhibition 2026"
+                      placeholder="e.g. Rakshabandhan Celebration Notice"
                       value={newTitle}
                       onChange={(e) => setNewTitle(e.target.value)}
                       className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
@@ -828,7 +839,7 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Admissions, Event, Notice, Holiday"
+                      placeholder="e.g. Holiday, Event, Admissions, Notice"
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
                       className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
@@ -841,22 +852,9 @@ export default function AdminDashboardPage() {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. July 2026 or Important Notice"
+                      placeholder="e.g. August 2026 or Important Notice"
                       value={newDate}
                       onChange={(e) => setNewDate(e.target.value)}
-                      className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="mb-1 block text-xs font-semibold text-slate-300">
-                      Link / URL
-                    </label>
-                    <input
-                      type="text"
-                      placeholder="/admissions, /contact, or https://..."
-                      value={newHref}
-                      onChange={(e) => setNewHref(e.target.value)}
                       className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
                     />
                   </div>
@@ -872,6 +870,139 @@ export default function AdminDashboardPage() {
                       onChange={(e) => setNewDesc(e.target.value)}
                       className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400 resize-none"
                     />
+                  </div>
+
+                  {/* Redirection / Destination Section */}
+                  <div className="sm:col-span-2 border-t border-slate-800 pt-4 mt-2">
+                    <label className="mb-1 block text-xs font-bold uppercase tracking-wider text-yellow-400">
+                      Click Action &amp; Redirection Option
+                    </label>
+                    <p className="mb-3 text-xs text-slate-400">
+                      Select where users go when they click this news item. Choose &quot;Notice Detail Popup&quot; if it has no separate page link.
+                    </p>
+
+                    <div className="grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "none"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="none"
+                          checked={redirectOption === "none"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>📄 Notice Detail Popup (No Redirect)</span>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "/admissions"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="/admissions"
+                          checked={redirectOption === "/admissions"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>🎓 Admissions Page (/admissions)</span>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "/contact"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="/contact"
+                          checked={redirectOption === "/contact"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>📞 Contact Us Page (/contact)</span>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "/gallery"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="/gallery"
+                          checked={redirectOption === "/gallery"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>🖼️ Photo Gallery (/gallery)</span>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "/facilities"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="/facilities"
+                          checked={redirectOption === "/facilities"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>🏫 Facilities Page (/facilities)</span>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 rounded-xl border p-3 cursor-pointer text-xs font-medium transition ${
+                          redirectOption === "custom"
+                            ? "border-yellow-400 bg-yellow-400/10 text-white font-bold"
+                            : "border-slate-800 bg-slate-950 text-slate-300 hover:border-slate-700"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="redirectOption"
+                          value="custom"
+                          checked={redirectOption === "custom"}
+                          onChange={(e) => setRedirectOption(e.target.value)}
+                          className="accent-yellow-400"
+                        />
+                        <span>🔗 Custom URL / External Link</span>
+                      </label>
+                    </div>
+
+                    {redirectOption === "custom" && (
+                      <div className="mt-3">
+                        <input
+                          type="text"
+                          required
+                          placeholder="Enter custom path or URL (e.g. /events or https://...)"
+                          value={customHref}
+                          onChange={(e) => setCustomHref(e.target.value)}
+                          className="w-full rounded-xl border border-slate-700 bg-slate-950 p-2.5 text-sm text-white outline-none focus:border-yellow-400"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -954,7 +1085,7 @@ export default function AdminDashboardPage() {
                     </div>
 
                     <div className="mt-4 pt-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-                      <span>Target: {item.href || "/admissions"}</span>
+                      <span>Target: {item.href && item.href !== "/news" ? item.href : "Notice Detail Popup (No Redirect)"}</span>
                     </div>
                   </div>
                 ))
