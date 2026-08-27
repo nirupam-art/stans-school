@@ -164,99 +164,75 @@ export default function Hero() {
       </button>
 
       {/* Main Hero Content */}
-      <div className="relative z-20 flex min-h-screen items-center justify-center px-4 pt-36 pb-20 text-center sm:px-6 sm:pb-24 lg:pt-24">
-        <div className="w-full max-w-5xl">
-          {/* Admissions Pill */}
+      <div className="relative z-20 flex min-h-screen items-center justify-center px-4 pt-32 pb-20 text-center sm:px-6 sm:pb-24">
+        <div className="w-full max-w-4xl">
+          {/* Subtle Admissions Tag */}
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.92 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            whileHover={{ scale: 1.05 }}
-            className="inline-flex items-center gap-2.5 rounded-full border border-yellow-300/40 bg-yellow-400/90 backdrop-blur-md px-5 py-2 text-sm font-black text-slate-950 shadow-[0_0_30px_rgba(250,204,21,0.35)] cursor-default transition"
+            className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 backdrop-blur-md px-4 py-1.5 text-xs font-bold text-yellow-300 shadow-sm cursor-default"
           >
-            <Sparkles size={16} className="text-slate-950 animate-spin-slow" />
+            <Sparkles size={14} className="text-yellow-400" />
             <span>Admissions Open for Session 2026–27</span>
           </motion.div>
 
-          {/* Headline */}
+          {/* Minimal Clean Headline */}
           <motion.h1
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12, duration: 0.85, ease: "easeOut" }}
-            className="mt-6 text-4xl font-black leading-[1.1] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
+            transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
+            className="mt-6 text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
           >
             St. An&apos;s School
             <br />
-            <span className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+            <span className="bg-gradient-to-r from-yellow-200 via-yellow-400 to-amber-400 bg-clip-text text-transparent">
               Nurturing Minds
             </span>
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Minimal Subtitle */}
           <motion.p
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.26, duration: 0.8, ease: "easeOut" }}
-            className="mx-auto mt-6 max-w-3xl text-base leading-relaxed text-slate-200 sm:text-lg md:text-xl"
+            transition={{ delay: 0.2, duration: 0.75, ease: "easeOut" }}
+            className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg md:text-xl font-medium"
           >
-            Excellence in Education • Character Building • Sports &amp; Leadership • Holistic Growth
+            Empowering students from Play Group to Class X with academic excellence, strong character, and holistic development.
           </motion.p>
 
-          {/* Feature Highlights Pills */}
+          {/* Minimal CTA Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.38, duration: 0.7 }}
-            className="mx-auto mt-7 flex max-w-3xl flex-wrap items-center justify-center gap-3"
-          >
-            {highlights.map((item) => {
-              const Icon = item.icon;
-              return (
-                <motion.div
-                  key={item.text}
-                  whileHover={{ y: -3, scale: 1.04 }}
-                  className="flex items-center gap-2 rounded-full border border-white/15 bg-slate-900/60 px-4 py-2 text-xs sm:text-sm font-semibold text-slate-200 backdrop-blur-md shadow-md transition"
-                >
-                  <Icon size={16} className="text-yellow-400" />
-                  <span>{item.text}</span>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-
-          {/* Interactive CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.52, duration: 0.75 }}
-            className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-5"
+            transition={{ delay: 0.35, duration: 0.7 }}
+            className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-4"
           >
             <Link
               href="/admissions"
-              className="group relative z-30 w-full overflow-hidden rounded-full bg-yellow-400 px-9 py-4 text-center font-black text-slate-950 shadow-[0_0_35px_rgba(250,204,21,0.4)] transition-all duration-300 hover:scale-105 hover:bg-yellow-300 sm:w-auto"
+              className="group relative z-30 w-full rounded-full bg-yellow-400 px-8 py-3.5 text-center text-sm font-black text-slate-950 shadow-[0_0_25px_rgba(250,204,21,0.35)] transition-all duration-300 hover:scale-105 hover:bg-yellow-300 sm:w-auto"
             >
-              <span className="relative z-10 flex items-center justify-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 Apply for Admission
                 <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
               </span>
-              <span className="absolute inset-y-0 -left-16 w-16 rotate-12 bg-white/40 transition-all duration-700 group-hover:left-[120%]" />
             </Link>
 
             <button
               type="button"
               onClick={() => scrollToSection("gallery")}
-              className="group relative z-30 w-full rounded-full border-2 border-white/80 bg-slate-950/40 backdrop-blur-md px-8 py-4 text-center font-black text-white transition-all duration-300 hover:scale-105 hover:border-yellow-400 hover:bg-white hover:text-slate-950 sm:w-auto shadow-lg"
+              className="group relative z-30 w-full rounded-full border border-white/20 bg-white/5 backdrop-blur-md px-7 py-3.5 text-center text-sm font-bold text-white transition-all duration-300 hover:scale-105 hover:border-yellow-400 hover:bg-white/10 sm:w-auto"
             >
               Explore Campus Life
             </button>
           </motion.div>
 
-          {/* Interactive Slider Dots with Progress Indicator */}
+          {/* Minimal Slider Dots */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="relative z-30 mt-10 flex items-center justify-center gap-3"
+            transition={{ delay: 0.5, duration: 0.6 }}
+            className="relative z-30 mt-12 flex items-center justify-center gap-2.5"
           >
             {images.map((_, index) => (
               <button
@@ -264,13 +240,13 @@ export default function Hero() {
                 type="button"
                 onClick={() => setCurrentImage(index)}
                 aria-label={`Go to slide ${index + 1}`}
-                className="group relative p-1.5 focus:outline-none"
+                className="group p-1 focus:outline-none"
               >
                 <div
-                  className={`h-2.5 rounded-full transition-all duration-500 ${
+                  className={`h-2 rounded-full transition-all duration-500 ${
                     currentImage === index
-                      ? "w-10 bg-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.8)]"
-                      : "w-2.5 bg-white/40 group-hover:bg-white/70"
+                      ? "w-8 bg-yellow-400 shadow-[0_0_12px_rgba(250,204,21,0.8)]"
+                      : "w-2 bg-white/30 group-hover:bg-white/60"
                   }`}
                 />
               </button>
@@ -279,32 +255,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Dynamic News Popup */}
+      {/* Sleek Non-intrusive News Popup */}
       <HeroNewsPopup />
-
-      {/* Smooth Scroll Down Indicator */}
-      <motion.div
-        initial={{ opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 z-30 hidden -translate-x-1/2 sm:block"
-      >
-        <button
-          type="button"
-          onClick={() => scrollToSection("achievements")}
-          aria-label="Scroll down"
-          className="flex flex-col items-center gap-2 text-xs font-semibold text-slate-400 transition hover:text-yellow-400"
-        >
-          <div className="flex h-11 w-6 justify-center rounded-full border-2 border-white/40 bg-white/5 backdrop-blur-sm">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ repeat: Infinity, duration: 1.6, ease: "easeInOut" }}
-              className="mt-1.5 h-2 w-1.5 rounded-full bg-yellow-400"
-            />
-          </div>
-          <span>Scroll</span>
-        </button>
-      </motion.div>
     </section>
   );
 }

@@ -34,7 +34,7 @@ export default function HeroNewsPopup() {
     async function loadAnnouncements() {
       const res = await getAnnouncements();
       if (res.success && res.data && res.data.length > 0) {
-        setItems(res.data.slice(0, 3));
+        setItems(res.data.slice(0, 2));
       }
     }
     loadAnnouncements();
@@ -46,157 +46,136 @@ export default function HeroNewsPopup() {
     <>
       {/* Mobile News Card */}
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
+        transition={{ delay: 0.8, duration: 0.5 }}
         className="
           absolute
-          bottom-5
+          bottom-4
           left-4
           right-4
           z-30
           rounded-2xl
           border
-          border-white/20
-          bg-white/95
-          p-4
+          border-white/15
+          bg-slate-900/90
+          p-3.5
           shadow-2xl
           backdrop-blur-xl
           lg:hidden
         "
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-black">
-            <Bell size={20} />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-yellow-400 text-slate-950">
+            <Bell size={18} />
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold uppercase tracking-[2px] text-yellow-700">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-yellow-400">
               {topItem.tag || "Latest Update"}
             </p>
 
-            <h3 className="truncate text-sm font-bold text-gray-900">
+            <h3 className="truncate text-xs font-bold text-white">
               {topItem.title}
             </h3>
           </div>
 
           <Link
             href={topItem.href || "/news"}
-            className="shrink-0 rounded-full bg-yellow-400 px-4 py-2 text-xs font-bold text-black transition hover:bg-yellow-500"
+            className="shrink-0 rounded-full bg-yellow-400 px-3.5 py-1.5 text-xs font-bold text-slate-950 transition hover:bg-yellow-300"
           >
             {topItem.href && topItem.href !== "/news" ? "View" : "Notice"}
           </Link>
         </div>
       </motion.div>
 
-      {/* Desktop News Popup */}
+      {/* Desktop Minimal Glass News Popup */}
       <motion.div
-        initial={{ opacity: 0, x: 80 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.9, duration: 0.7 }}
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
         className="
           absolute
-          right-6
-          top-1/2
+          right-8
+          bottom-8
           z-30
           hidden
-          w-[330px]
-          -translate-y-1/2
-          rounded-3xl
+          w-[310px]
+          rounded-2xl
           border
-          border-white/20
-          bg-white/95
-          p-5
+          border-white/15
+          bg-slate-900/80
+          p-4
           shadow-2xl
           backdrop-blur-xl
           xl:block
         "
       >
         {/* Heading */}
-        <div className="mb-5 flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-yellow-400 text-black">
-            <Bell size={22} />
+        <div className="mb-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-400 text-slate-950">
+              <Bell size={16} />
+            </div>
+
+            <div>
+              <h3 className="text-sm font-bold text-white">
+                Latest Bulletins
+              </h3>
+            </div>
           </div>
 
-          <div>
-            <h3 className="text-lg font-bold text-gray-900">
-              Latest Updates
-            </h3>
-
-            <p className="text-sm text-gray-500">
-              News & announcements
-            </p>
-          </div>
+          <Link
+            href="/news"
+            className="text-[11px] font-bold text-yellow-400 hover:underline"
+          >
+            View All →
+          </Link>
         </div>
 
         {/* News Items */}
-        <div className="space-y-4">
-          {items.map((item, index) => (
+        <div className="space-y-2.5">
+          {items.slice(0, 2).map((item, index) => (
             <Link
               key={item.id || index}
               href={item.href || "/news"}
               className="
                 group
                 block
-                rounded-2xl
+                rounded-xl
                 border
-                border-gray-100
-                bg-gray-50
-                p-4
+                border-white/10
+                bg-white/5
+                p-3
                 transition-all
-                duration-300
-                hover:border-yellow-400
-                hover:bg-yellow-50
-                hover:shadow-md
+                duration-200
+                hover:border-yellow-400/50
+                hover:bg-white/10
               "
             >
-              <div className="mb-2 flex items-center gap-2 text-xs font-semibold text-yellow-700">
-                <CalendarDays size={14} />
+              <div className="mb-1 flex items-center gap-2 text-[10px] font-semibold text-yellow-400">
+                <CalendarDays size={12} />
                 <span>{item.date}</span>
                 {item.tag && (
-                  <span className="ml-auto rounded-full bg-yellow-200/60 px-2 py-0.5 text-[10px] font-bold text-yellow-900">
+                  <span className="ml-auto rounded-full bg-yellow-400/20 px-2 py-0.5 text-[9px] font-bold text-yellow-300 border border-yellow-400/30">
                     {item.tag}
                   </span>
                 )}
               </div>
 
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-sm font-semibold leading-6 text-gray-800">
+              <div className="flex items-center justify-between gap-2">
+                <p className="line-clamp-1 text-xs font-semibold text-slate-200 group-hover:text-white">
                   {item.title}
                 </p>
 
                 <ArrowRight
-                  size={18}
-                  className="shrink-0 text-gray-400 transition group-hover:translate-x-1 group-hover:text-yellow-600"
+                  size={14}
+                  className="shrink-0 text-slate-400 transition group-hover:translate-x-0.5 group-hover:text-yellow-400"
                 />
               </div>
             </Link>
           ))}
         </div>
-
-        {/* Button */}
-        <Link
-          href="/news"
-          className="
-            mt-5
-            flex
-            w-full
-            items-center
-            justify-center
-            rounded-full
-            bg-yellow-400
-            px-5
-            py-3
-            text-sm
-            font-bold
-            text-black
-            transition
-            hover:scale-[1.02]
-            hover:bg-yellow-500
-          "
-        >
-          View All Bulletins &amp; Notices →
-        </Link>
       </motion.div>
     </>
   );

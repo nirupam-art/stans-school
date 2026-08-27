@@ -17,6 +17,7 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const links: NavItem[] = [
     { name: "Home", href: "/", sectionId: "home" },
@@ -27,6 +28,20 @@ export default function Navbar() {
     { name: "Admissions", href: "/admissions" },
     { name: "Contact", href: "/contact" },
   ];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const smoothScrollTo = (targetId: string) => {
     if (targetId === "home" || targetId === "top") {
@@ -102,36 +117,42 @@ export default function Navbar() {
     }
   }, [pathname]);
 
+  const isHomeTop = pathname === "/" && !isScrolled;
+
   return (
     <motion.nav
       initial={{ y: -80 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed left-0 top-0 z-50 w-full border-b border-gray-200/80 bg-white/95 shadow-sm backdrop-blur-md"
+      className={`fixed left-0 top-0 z-50 w-full transition-all duration-300 ${
+        isHomeTop
+          ? "bg-transparent border-transparent py-4 shadow-none"
+          : "bg-slate-950/85 backdrop-blur-xl border-b border-white/10 py-3 shadow-xl"
+      }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 md:py-3.5">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* School Logo & Title */}
         <Link
           href="/"
           onClick={handleLogoClick}
           className="group flex items-center gap-3 transition"
         >
-          <div className="relative h-12 w-12 overflow-hidden rounded-full border-2 border-yellow-400/80 p-0.5 shadow transition group-hover:scale-105">
+          <div className="relative h-11 w-11 overflow-hidden rounded-full border-2 border-yellow-400/90 p-0.5 shadow-md transition group-hover:scale-105">
             <Image
               src="/logo.png"
               alt="St. An's Secondary School Logo"
-              width={48}
-              height={48}
+              width={44}
+              height={44}
               priority
               className="rounded-full object-contain"
             />
           </div>
 
           <div>
-            <h1 className="text-lg font-black leading-tight text-gray-900 transition group-hover:text-yellow-600 sm:text-xl md:text-2xl">
+            <h1 className="text-lg font-black leading-tight text-white transition group-hover:text-yellow-400 sm:text-xl md:text-2xl drop-shadow-sm">
               St. An&apos;s School
             </h1>
-            <p className="text-xs font-semibold text-gray-500">
+            <p className="text-xs font-semibold text-slate-300/90">
               Jalore, Rajasthan
             </p>
           </div>
@@ -151,13 +172,13 @@ export default function Navbar() {
                 onClick={(e) => handleNavClick(e, item)}
                 className={`group relative text-sm font-bold transition-all duration-200 ${
                   pathname === item.href
-                    ? "text-yellow-600"
-                    : "text-gray-700 hover:text-yellow-600"
+                    ? "text-yellow-400"
+                    : "text-slate-100 hover:text-yellow-400"
                 }`}
               >
                 {item.name}
                 <span
-                  className={`absolute -bottom-1 left-0 h-[2px] bg-yellow-500 transition-all duration-300 ${
+                  className={`absolute -bottom-1 left-0 h-[2px] bg-yellow-400 transition-all duration-300 ${
                     pathname === item.href ? "w-full" : "w-0 group-hover:w-full"
                   }`}
                 />
@@ -170,7 +191,7 @@ export default function Navbar() {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             href="/admissions"
-            className="rounded-full bg-yellow-400 px-6 py-2.5 text-sm font-black text-slate-950 shadow-md transition-all duration-300 hover:scale-105 hover:bg-yellow-500 hover:shadow-lg"
+            className="rounded-full bg-yellow-400 px-6 py-2 text-sm font-black text-slate-950 shadow-md transition-all duration-300 hover:scale-105 hover:bg-yellow-300 hover:shadow-[0_0_20px_rgba(250,204,21,0.5)]"
           >
             Admissions Open
           </Link>
@@ -180,10 +201,10 @@ export default function Navbar() {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-900 transition hover:bg-yellow-100 hover:text-yellow-800 lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:bg-yellow-400 hover:text-slate-950 lg:hidden border border-white/15"
           aria-label="Toggle navigation menu"
         >
-          {isOpen ? <X size={22} /> : <Menu size={22} />}
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
@@ -195,7 +216,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25 }}
-            className="overflow-hidden border-t border-gray-200 bg-white/98 backdrop-blur-xl shadow-2xl lg:hidden"
+            className="overflow-hidden border-t border-white/10 bg-slate-950/95 backdrop-blur-2xl shadow-2xl lg:hidden"
           >
             <div className="space-y-2 px-6 py-6">
               {links.map((item) => (
@@ -205,8 +226,8 @@ export default function Navbar() {
                   onClick={(e) => handleNavClick(e, item)}
                   className={`block rounded-xl px-4 py-3 text-base font-bold transition ${
                     pathname === item.href
-                      ? "bg-yellow-100 text-yellow-800"
-                      : "text-gray-800 hover:bg-gray-50 hover:text-yellow-600"
+                      ? "bg-yellow-400/20 text-yellow-400 border border-yellow-400/30"
+                      : "text-slate-200 hover:bg-white/5 hover:text-yellow-400"
                   }`}
                 >
                   {item.name}
@@ -217,7 +238,7 @@ export default function Navbar() {
                 <Link
                   href="/admissions"
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-center text-sm font-black text-slate-950 shadow-md transition hover:bg-yellow-500"
+                  className="flex w-full items-center justify-center rounded-full bg-yellow-400 px-6 py-3 text-center text-sm font-black text-slate-950 shadow-md transition hover:bg-yellow-300"
                 >
                   Apply for Admission 2026
                 </Link>
