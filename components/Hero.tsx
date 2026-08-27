@@ -166,23 +166,12 @@ export default function Hero() {
       {/* Main Hero Content */}
       <div className="relative z-20 flex min-h-screen items-center justify-center px-4 pt-32 pb-20 text-center sm:px-6 sm:pb-24">
         <div className="w-full max-w-4xl">
-          {/* Subtle Admissions Tag */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="inline-flex items-center gap-2 rounded-full border border-yellow-400/30 bg-yellow-400/10 backdrop-blur-md px-4 py-1.5 text-xs font-bold text-yellow-300 shadow-sm cursor-default"
-          >
-            <Sparkles size={14} className="text-yellow-400" />
-            <span>Admissions Open for Session 2026–27</span>
-          </motion.div>
-
           {/* Minimal Clean Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1, duration: 0.8, ease: "easeOut" }}
-            className="mt-6 text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
+            className="text-4xl font-black leading-tight tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl"
           >
             St. An&apos;s School
             <br />
